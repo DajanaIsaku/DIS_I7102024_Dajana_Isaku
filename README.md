@@ -29,8 +29,16 @@ This system lets customers browse books, place orders, process payments, and rec
 ## Architecture Overview
 
 ```mermaid
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
 flowchart TB
-    Client[Client / Postman] --> GW[API Gateway :8080]
+
+    Client[Client / Postman]
+    DS[discovery-server :8761]
+    CS[config-server :8888]
+    GW[API Gateway :8080]
+
+    Client --> GW
+
     GW --> US[user-service :8081]
     GW --> BS[book-service :8082]
     GW --> OS[order-service :8083]
@@ -50,19 +58,19 @@ flowchart TB
     PS --> DB4[(payment_db)]
     NS --> DB5[(notification_db)]
 
-    DS[discovery-server :8761] -.-> US
+    DS -.-> GW
+    DS -.-> US
     DS -.-> BS
     DS -.-> OS
     DS -.-> PS
     DS -.-> NS
-    DS -.-> GW
 
-    CS[config-server :8888] -.-> US
+    CS -.-> GW
+    CS -.-> US
     CS -.-> BS
     CS -.-> OS
     CS -.-> PS
     CS -.-> NS
-    CS -.-> GW
 ```
 
 ## Synchronous Communication
